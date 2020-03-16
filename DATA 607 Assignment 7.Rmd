@@ -1,0 +1,92 @@
+---
+title: "DATA607-Assignment7"
+output: html_document
+---
+
+
+***Gehad Gad***
+
+***March 15th, 2020***
+
+***DATA 607 Assignment 7***
+
+
+***Assignment instructions:***
+Pick three of you favorite books on one of your favorite subjects. At least one of the books should have more than one author. For each book, include the title, authors, and two or three other attributes that you find interesting.
+
+Take the information that you’ve selected about these three books, and separately create three files which store the book’s information in HTML (using an html table), XML, and JSON formats (e.g. “books.html”, “books.xml”, and “books.json”). To help you better understand the different file structures, I’d prefer that you create each of these files “by hand” unless you’re already very comfortable with the file formats.
+
+#Import libraries and/or Packages
+
+```{r}
+library(XML)
+library(RCurl)
+library(rjson)
+library(jsonlite)
+library(DT)
+```
+
+#Read HTML file
+
+```{r}
+#I created a booklist and uploaded it to be read from GitHub. 
+
+Booklist_html <-"https://raw.githubusercontent.com/GehadGad/DATA607-Assignment-7-html/master/Booklist.html"
+
+Booklist_html <- getURL (Booklist_html)
+
+Booklist_html <- readHTMLTable(Booklist_html)
+
+BookList1 <- Booklist_html[[1]]
+
+datatable(BookList1)
+
+```
+
+```{r}
+
+str(BookList1)
+
+```
+
+
+#Read JSON file
+
+```{r}
+
+Booklist_json <- "https://raw.githubusercontent.com/GehadGad/DAT-607-Assignment-7-Json/master/Booklist.json"
+
+Book_Json <- getURLContent(Booklist_json)
+booksJ= fromJSON(Book_Json)
+booksJSON <- data.frame(booksJ)
+datatable(booksJSON)
+
+```
+
+```{r}
+str(booksJSON)
+```
+
+#Read XML file
+```{r}
+Booklist_xml<- "https://raw.githubusercontent.com/GehadGad/DATA-607-Assignment-7-Book.xml/master/Booklist3.xml"
+
+Booklist <- getURL(Booklist_xml)
+
+BooklistXML <- xmlTreeParse(Booklist)
+
+class(BooklistXML)
+
+topxml <- xmlRoot(BooklistXML)
+topxml <- xmlSApply(topxml,
+function(x) xmlSApply(x, xmlValue))
+
+xml_df <- data.frame(t(topxml),
+                     row.names=NULL)
+
+datatable (xml_df)
+
+```
+Conclusion:
+
+HTML and XML are very similar. JSON is a little different.
